@@ -1,0 +1,55 @@
+mport java.util.*;
+import java.io.*;
+
+public class Java2 {
+    
+static boolean checkPerfectSquare(double number)    {   
+return ((number - Math.floor(number)) == 0);   
+}  
+
+public static void main(String[] args) {
+int [] arr  = {8,9,10,15,16};
+double[] ans = new double[arr.length];
+
+for(int i=0;i<arr.length;i++) {
+ans[i] = Math.sqrt(arr[i]);
+System.out.println(checkPerfectSquare(res[i]));
+}
+
+double temp;
+int m=0;
+for (int i = 0; i < arr.length; i++) {
+            if (checkPerfectSquare(res[i])) {
+                temp = ans[i];
+                ans[i] = ans[m];
+                ans[m] = temp;
+                m++;
+            }
+        }
+
+for(int i = 0; i < m; i++) {
+for(int j = i+1; j < m; j++) {
+if(arr[j-1] < arr[j]) {
+temp = ans[j-1];
+ans[j-1] = ans[j];
+ans[j] = temp;
+}
+}
+}
+
+for(int i = m; i < arr.length; i++) {
+for(int j = i+1; j < arr.length; j++) {
+if(arr[j-1] < arr[j]) {
+temp = ans[j-1];
+ans[j-1] = ans[j];
+ans[j] = temp;
+}
+}
+}
+
+for(int i=0;i<arr.length;i++) {
+System.out.print(ans[i]+ " ");
+}
+System.out.println();
+}
+}
