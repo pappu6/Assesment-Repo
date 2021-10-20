@@ -1,0 +1,59 @@
+import java.util.*;
+import java.lang.*;
+public class User{
+	 int id;
+	 String name;
+	 Integer salary;
+	
+	public User(int id, String name, Integer salary) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getSalary() {
+		return salary;
+	}
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+	
+	@Override
+	public String toString() {
+		return "{" + id + ", " + name + ", " + salary + "}";
+	}
+	
+  public static void main(String[] args) {
+		List<User> array = new ArrayList<>();
+		array.add(new User(1, "User1", 100));
+		array.add(new User(3, "User3", 600));
+		array.add(new User(2, "User2", 400));
+		Collections.sort(array, new userComparator());
+		
+		LinkedHashMap<Integer, User> userMap = new LinkedHashMap<>();
+		userMap.put(new Integer(array.get(0).getId()), array.get(0));
+		userMap.put(new Integer(array.get(1).getId()), array.get(1));
+		userMap.put(new Integer(array.get(2).getId()), array.get(2));
+		for(Map.Entry<Integer, User> entry: userMap.entrySet()) {
+			System.out.println("Key: " + entry.getKey() + " " + "Value: " + entry.getValue().toString());
+		}
+		
+	}
+}
+class userComparator implements Comparator<User> {
+	public int compare(User a, User b) {
+		return a.salary.compareTo(b.salary);
+	}
+}
