@@ -1,0 +1,113 @@
+import java.util.*;
+import java.lang.*;
+import java.util.Map.Entry;
+
+class User
+{
+    int id;
+    String name;
+    Integer salary;
+    
+    public User (int id,String name,Integer salary)
+    {
+        this.id=id;
+        this.name=name;
+        this.salary=salary;
+    }
+    
+   public int getSalary() {
+		return salary;
+	}
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+	
+	public String toString() {
+		return "{" + id + ", " + name + ", " + salary + "}";
+	}
+}
+public class ExampleProjectBudget {
+	private String project_id;
+	private String project_name;
+	private int project_expense;
+	private User user;
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public ExampleProjectBudget(String project_id, String project_name, int project_expense, User user){
+		super();
+		this.project_id = project_id;
+		this.project_name = project_name;
+		this.project_expense = project_expense;
+		this.user = user;
+	}
+	public String getProject_id() {
+		return project_id;
+	}
+  public void setProject_id(String project_id) {
+		this.project_id = project_id;
+	}
+	public String getProject_name() {
+		return project_name;
+	}
+	public void setProject_name(String project_name) {
+		this.project_name = project_name;
+	}
+	public int getProject_expense() {
+		return project_expense;
+	}
+	public void setProject_expense(int project_expense) {
+		this.project_expense = project_expense;
+	}
+	
+	public static void main(String[] args) {
+		List<ExampleProjectBudget> users = new ArrayList<>();
+		users.add(new ExampleProjectBudget("pid1", "ATT", 1000, new User(1, "User1", 100)));
+		users.add(new ExampleProjectBudget("pid2", "Google", 320, new User(4, "User4", 150)));
+		users.add(new ExampleProjectBudget("pid1", "ATT", 1000, new User(3, "User3", 500)));
+		users.add(new ExampleProjectBudget("pid2", "Google", 320, new User(2, "User2", 100)));
+		
+		LinkedHashMap<String, ArrayList<User>> userMap = new LinkedHashMap<>();
+		for(ExampleProjectBudget obj: users) {
+			if(userMap.containsKey(obj.getProject_id())) {
+				ArrayList<User> tempUserList = userMap.get(obj.getProject_id());
+				tempUserList.add(obj.getUser());
+				Collections.sort(tempUserList, new ProjectComparator());
+				userMap.put(obj.getProject_id(), tempUserList);
+			}else {
+				ArrayList<User> tempUserList = new ArrayList<>();
+				tempUserList.add(obj.getUser());
+				userMap.put(obj.getProject_id(), tempUserList);
+			}		
+    }
+		LinkedHashMap<String, Integer> budget = new LinkedHashMap<>();
+		for(Map.Entry<String, ArrayList<User>> entry :userMap.entrySet()) {
+			System.out.println(entry.getKey() + " " + entry.getValue());
+			ArrayList<User> userList = entry.getValue();
+			int b = 0;
+			for(User u: userList) {
+				b += u.getSalary();
+			}
+			budget.put(entry.getKey(), b);
+		}
+		LinkedHashMap<String, Integer> projectExpenseMap = new LinkedHashMap<>();
+		for(ExampleProjectBudget uu: users) {
+			projectExpenseMap.put(uu.getProject_id(), uu.getProject_expense());
+		}
+		for(Entry<String, Integer> entry :budget.entrySet()) {
+			System.out.println("Project Id: " + entry.getKey() + " Total Cost: " + entry.getValue() + 
+					" Credit of " + (projectExpenseMap.get(entry.getKey()) - entry.getValue()) + " available");
+		}
+	}
+}
+
+
+class ProjectComparator implements Comparator<User>{
+	@Override
+	public int compare(User a, User b) {
+		return a.salary.compareTo(b.salary);
+	}
+}
