@@ -1,0 +1,84 @@
+import java.util.*;
+import java.lang.*;
+import java.util.Map.Entry;
+
+public class Project {
+	private String project_id;
+	private String project_name;
+	private int project_expense;
+	private User user;
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Project(String project_id, String project_name, int project_expense, User user){
+		super();
+		this.project_id = project_id;
+		this.project_name = project_name;
+		this.project_expense = project_expense;
+		this.user = user;
+	}
+	public String getProject_id() {
+		return project_id;
+	}
+	public void setProject_id(String project_id) {
+		this.project_id = project_id;
+	}
+	public String getProject_name() {
+		return project_name;
+	}
+	public void setProject_name(String project_name) {
+		this.project_name = project_name;
+	}
+	public int getProject_expense() {
+		return project_expense;
+	}
+	public void setProject_expense(int project_expense) {
+		this.project_expense = project_expense;
+	}
+	
+	public static void main(String[] args) {
+		List<ProjectWithOutOfBudget> users = new ArrayList<>();
+		users.add(new Project("pid1", "ATT", 1000, new User(1, "User1", 100)));
+		users.add(new Project("pid2", "Google", 320, new User(4, "User4", 450)));
+		users.add(new Project("pid1", "ATT", 1000, new User(3, "User3", 500)));
+		users.add(new Project("pid2", "Google", 320, new User(2, "User2", 100)));
+		LinkedHashMap<String, ArrayList> userMap = new LinkedHashMap<>();
+		for(Project obj: users) {
+			int limit = (int) (obj.getProject_expense() * 1.1);
+			if(obj.getUser().getSalary() > limit) {
+				if(userMap.containsKey("Out Of Budget")) {
+					ArrayList tempUserList = userMap.get("Out Of Budget");
+					tempUserList.add(obj);
+					userMap.put("Out Of Budget", tempUserList);
+				}else {
+					ArrayList tempUserList = new ArrayList<>();
+					tempUserList.add(obj);
+					userMap.put("Out Of Budget", tempUserList);
+				}
+			}else {
+				if(userMap.containsKey(obj.getProject_id())) {
+					ArrayList<User> tempUserList = userMap.get(obj.getProject_id());
+					tempUserList.add(obj.getUser());
+					Collections.sort(tempUserList, new ProjectComparator());
+					userMap.put(obj.getProject_id(), tempUserList);
+				}else {
+					ArrayList<User> tempUserList = new ArrayList<>();
+					tempUserList.add(obj.getUser());
+					userMap.put(obj.getProject_id(), tempUserList);
+				}
+			}
+		}
+		for(Map.Entry<String, ArrayList> entry :userMap.entrySet()) {
+			ArrayList u = entry.getValue();
+			System.out.println(entry.getKey() + " " + u);
+		}
+	}
+	@Override
+	public String toString() {
+		return "[project_id=" + project_id + ", project_name=" + project_name
+				+ ", project_expense=" + project_expense + ", user = " + user + "]";
+	}
+}
